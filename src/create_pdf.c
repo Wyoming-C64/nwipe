@@ -137,7 +137,7 @@ int create_pdf( nwipe_context_t* ptr )
     pdf_add_text_wrap( pdf, NULL, pdf_footer, 10, 0, 30, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_add_line( pdf, NULL, 50, 50, 550, 50, 3, PDF_BLACK );
     pdf_add_line( pdf, NULL, 50, 650, 550, 650, 3, PDF_BLACK );
-    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_wyosupport_jpg, 311504 );
+    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_wyosupport_jpg, 80084 );
     pdf_set_font( pdf, "Helvetica-Bold" );
     snprintf( model_header, sizeof( model_header ), " %s: %s ", "Model", c->device_model );
     pdf_add_text_wrap( pdf, NULL, model_header, 14, 0, 755, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
