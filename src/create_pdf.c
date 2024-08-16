@@ -33,8 +33,7 @@
 #include "PDFGen/pdfgen.h"
 #include "version.h"
 #include "method.h"
-#include "embedded_images/wyosupport.jpg.h"
-#include "embedded_images/shred_db.jpg.h"
+#include "embedded_images/wyosupport.h"
 #include "embedded_images/tick_erased.jpg.h"
 #include "embedded_images/redcross.h"
 #include "embedded_images/nwipe_exclamation.jpg.h"
@@ -122,7 +121,7 @@ int create_pdf( nwipe_context_t* ptr )
     pdf = pdf_create( PDF_LETTER_WIDTH, PDF_LETTER_HEIGHT, &info );
 
     /* Create footer text string and append the version */
-    snprintf( pdf_footer, sizeof( pdf_footer ), "Drive Erasure by WyoSWIPE version %s", version_string );
+    snprintf( pdf_footer, sizeof( pdf_footer ), "Drive Erasure by WyoSWipe version %s", version_string );
 
     pdf_set_font( pdf, "Helvetica" );
     struct pdf_object* page_1 = pdf_append_page( pdf );
@@ -137,7 +136,7 @@ int create_pdf( nwipe_context_t* ptr )
     pdf_add_text_wrap( pdf, NULL, pdf_footer, 10, 0, 30, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_add_line( pdf, NULL, 50, 50, 550, 50, 3, PDF_BLACK );
     pdf_add_line( pdf, NULL, 50, 650, 550, 650, 3, PDF_BLACK );
-    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_wyosupport_jpg, 80084 );
+    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_wyosupport_jpg, 36710 );
     pdf_set_font( pdf, "Helvetica-Bold" );
     snprintf( model_header, sizeof( model_header ), " %s: %s ", "Model", c->device_model );
     pdf_add_text_wrap( pdf, NULL, model_header, 14, 0, 755, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
@@ -145,11 +144,12 @@ int create_pdf( nwipe_context_t* ptr )
     pdf_add_text_wrap( pdf, NULL, serial_header, 14, 0, 735, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_set_font( pdf, "Helvetica" );
 
-    pdf_add_text_wrap( pdf, NULL, "Drive Data Erasure Report", 18, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    pdf_add_text_wrap(
+        pdf, NULL, "Drive Data Erasure Report", 18, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     snprintf( barcode, sizeof( barcode ), "%s:%s", c->device_model, c->device_serial_no );
     pdf_add_text_wrap(
         pdf, NULL, "Page 1 - Erasure Status", 14, 0, 670, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
-    pdf_add_barcode( pdf, NULL, PDF_BARCODE_128A, 100, 790, 400, 25, barcode, PDF_BLACK );
+    pdf_add_barcode( pdf, NULL, PDF_BARCODE_128A, 100, 780, 400, 25, barcode, PDF_BLACK );
 
     /* ------------------------ */
     /* Organisation Information */
@@ -982,7 +982,7 @@ void create_header_and_footer( nwipe_context_t* c, char* page_title )
     pdf_add_text_wrap( pdf, NULL, pdf_footer, 12, 0, 30, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_add_line( pdf, NULL, 50, 50, 550, 50, 3, PDF_BLACK );
     pdf_add_line( pdf, NULL, 50, 650, 550, 650, 3, PDF_BLACK );
-    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_shred_db_jpg, 27063 );
+    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_wyosupport_jpg, 36710 );
     pdf_set_font( pdf, "Helvetica-Bold" );
     snprintf( model_header, sizeof( model_header ), " %s: %s ", "Model", c->device_model );
     pdf_add_text_wrap( pdf, NULL, model_header, 14, 0, 755, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
@@ -990,7 +990,8 @@ void create_header_and_footer( nwipe_context_t* c, char* page_title )
     pdf_add_text_wrap( pdf, NULL, serial_header, 14, 0, 735, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_set_font( pdf, "Helvetica" );
 
-    pdf_add_text_wrap( pdf, NULL, "Drive Erasure Report", 24, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    pdf_add_text_wrap(
+        pdf, NULL, "Drive Erasure Report", 24, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     snprintf( barcode, sizeof( barcode ), "%s:%s", c->device_model, c->device_serial_no );
     pdf_add_text_wrap( pdf, NULL, page_title, 14, 0, 670, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_add_barcode( pdf, NULL, PDF_BARCODE_128A, 100, 790, 400, 25, barcode, PDF_BLACK );
