@@ -33,6 +33,7 @@
 #include "PDFGen/pdfgen.h"
 #include "version.h"
 #include "method.h"
+#include "embedded_images/wyosupport.jpg.h"
 #include "embedded_images/shred_db.jpg.h"
 #include "embedded_images/tick_erased.jpg.h"
 #include "embedded_images/redcross.h"
@@ -95,11 +96,11 @@ int create_pdf( nwipe_context_t* ptr )
     //    float height;
     //    float page_width;
 
-    struct pdf_info info = { .creator = "https://github.com/PartialVolume/shredos.x86_64",
-                             .producer = "https://github.com/martijnvanbrummelen/nwipe",
-                             .title = "PDF Disk Erasure Certificate",
-                             .author = "Nwipe",
-                             .subject = "Disk Erase Certificate",
+    struct pdf_info info = { .creator = "Wyo Support",
+                             .producer = "Wyo Support",
+                             .title = "PDF Drive Erasure Certificate",
+                             .author = "WyoSwipe",
+                             .subject = "Drive Erasure Certificate",
                              .date = "Today" };
 
     /* A pointer to the system time struct. */
@@ -116,12 +117,12 @@ int create_pdf( nwipe_context_t* ptr )
     /* Used to display correct icon on page 2 */
     status_icon = 0;  // zero don't display icon, see header STATUS_ICON_..
 
-    // nwipe_log( NWIPE_LOG_NOTICE, "Create the PDF disk erasure certificate" );
+    // nwipe_log( NWIPE_LOG_NOTICE, "Create the PDF Drive erasure certificate" );
     // struct pdf_doc* pdf = pdf_create( PDF_A4_WIDTH, PDF_A4_HEIGHT, &info );
-    pdf = pdf_create( PDF_A4_WIDTH, PDF_A4_HEIGHT, &info );
+    pdf = pdf_create( PDF_LETTER_WIDTH, PDF_LETTER_HEIGHT, &info );
 
     /* Create footer text string and append the version */
-    snprintf( pdf_footer, sizeof( pdf_footer ), "Disc Erasure by NWIPE version %s", version_string );
+    snprintf( pdf_footer, sizeof( pdf_footer ), "Drive Erasure by WyoSWIPE version %s", version_string );
 
     pdf_set_font( pdf, "Helvetica" );
     struct pdf_object* page_1 = pdf_append_page( pdf );
@@ -133,10 +134,10 @@ int create_pdf( nwipe_context_t* ptr )
      * Create header and footer on page 1, with the exception of the green
      * tick/red icon which is set from the 'status' section below
      */
-    pdf_add_text_wrap( pdf, NULL, pdf_footer, 12, 0, 30, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    pdf_add_text_wrap( pdf, NULL, pdf_footer, 10, 0, 30, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_add_line( pdf, NULL, 50, 50, 550, 50, 3, PDF_BLACK );
     pdf_add_line( pdf, NULL, 50, 650, 550, 650, 3, PDF_BLACK );
-    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_shred_db_jpg, 27063 );
+    pdf_add_image_data( pdf, NULL, 45, 665, 100, 100, bin2c_wyosupport_jpg, 311504 );
     pdf_set_font( pdf, "Helvetica-Bold" );
     snprintf( model_header, sizeof( model_header ), " %s: %s ", "Model", c->device_model );
     pdf_add_text_wrap( pdf, NULL, model_header, 14, 0, 755, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
@@ -144,7 +145,7 @@ int create_pdf( nwipe_context_t* ptr )
     pdf_add_text_wrap( pdf, NULL, serial_header, 14, 0, 735, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_set_font( pdf, "Helvetica" );
 
-    pdf_add_text_wrap( pdf, NULL, "Disk Erasure Report", 24, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    pdf_add_text_wrap( pdf, NULL, "Drive Data Erasure Report", 18, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     snprintf( barcode, sizeof( barcode ), "%s:%s", c->device_model, c->device_serial_no );
     pdf_add_text_wrap(
         pdf, NULL, "Page 1 - Erasure Status", 14, 0, 670, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
@@ -154,11 +155,11 @@ int create_pdf( nwipe_context_t* ptr )
     /* Organisation Information */
 
     pdf_add_line( pdf, NULL, 50, 550, 550, 550, 1, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Organisation Performing The Disk Erasure", 12, 50, 630, PDF_BLUE );
-    pdf_add_text( pdf, NULL, "Business Name:", 12, 60, 610, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Business Address:", 12, 60, 590, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Contact Name:", 12, 60, 570, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Contact Phone:", 12, 300, 570, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Organization Performing The Drive Erasure", 12, 50, 630, PDF_BLUE );
+    // pdf_add_text( pdf, NULL, "Business Name:", 12, 60, 610, PDF_GRAY );
+    // pdf_add_text( pdf, NULL, "Business Address:", 12, 60, 590, PDF_GRAY );
+    // pdf_add_text( pdf, NULL, "Contact Name:", 12, 60, 570, PDF_GRAY );
+    // pdf_add_text( pdf, NULL, "Contact Phone:", 12, 300, 570, PDF_GRAY );
 
     /* Obtain organisational details from nwipe.conf - See conf.c */
     setting = config_lookup( &nwipe_cfg, "Organisation_Details" );
@@ -167,19 +168,23 @@ int create_pdf( nwipe_context_t* ptr )
         pdf_set_font( pdf, "Helvetica-Bold" );
         if( config_setting_lookup_string( setting, "Business_Name", &business_name ) )
         {
-            pdf_add_text( pdf, NULL, business_name, text_size_data, 153, 610, PDF_BLACK );
+            // pdf_add_text( pdf, NULL, business_name, text_size_data, 153, 610, PDF_BLACK );
+            pdf_add_text( pdf, NULL, business_name, text_size_data, 60, 610, PDF_BLACK );
         }
         if( config_setting_lookup_string( setting, "Business_Address", &business_address ) )
         {
-            pdf_add_text( pdf, NULL, business_address, text_size_data, 165, 590, PDF_BLACK );
+            // pdf_add_text( pdf, NULL, business_address, text_size_data, 165, 590, PDF_BLACK );
+            pdf_add_text( pdf, NULL, business_address, text_size_data, 60, 590, PDF_BLACK );
         }
         if( config_setting_lookup_string( setting, "Contact_Name", &contact_name ) )
         {
-            pdf_add_text( pdf, NULL, contact_name, text_size_data, 145, 570, PDF_BLACK );
+            // pdf_add_text( pdf, NULL, contact_name, text_size_data, 145, 570, PDF_BLACK );
+            pdf_add_text( pdf, NULL, contact_name, text_size_data, 60, 570, PDF_BLACK );
         }
         if( config_setting_lookup_string( setting, "Contact_Phone", &contact_phone ) )
         {
-            pdf_add_text( pdf, NULL, contact_phone, text_size_data, 390, 570, PDF_BLACK );
+            // pdf_add_text( pdf, NULL, contact_phone, text_size_data, 390, 570, PDF_BLACK );
+            pdf_add_text( pdf, NULL, contact_phone, text_size_data, 300, 570, PDF_BLACK );
         }
         pdf_set_font( pdf, "Helvetica" );
     }
@@ -226,10 +231,10 @@ int create_pdf( nwipe_context_t* ptr )
     }
 
     /******************
-     * Disk Information
+     * Drive Information
      */
     pdf_add_line( pdf, NULL, 50, 350, 550, 350, 1, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Disk Information", 12, 50, 430, PDF_BLUE );
+    pdf_add_text( pdf, NULL, "Drive Information", 12, 50, 430, PDF_BLUE );
 
     /************
      * Make/model
@@ -247,7 +252,7 @@ int create_pdf( nwipe_context_t* ptr )
     {
         snprintf( c->device_serial_no, sizeof( c->device_serial_no ), "Unknown" );
     }
-    pdf_set_font( pdf, "Helvetica-Bold" );
+    pdf_set_font( pdf, "Courier-Bold" );
     pdf_add_text( pdf, NULL, c->device_serial_no, text_size_data, 380, 410, PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
@@ -259,8 +264,16 @@ int create_pdf( nwipe_context_t* ptr )
     pdf_add_text( pdf, NULL, c->device_type_str, text_size_data, 370, 390, PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
+    /******************************
+     * Computer/Device Serial Number (Blank for Technician to write in.)
+     */
+    pdf_add_text( pdf, NULL, "Computer S/N:", 12, 340, 370, PDF_GRAY );
+    pdf_set_font( pdf, "Courier-Bold" );
+    pdf_add_text( pdf, NULL, c->device_type_str, text_size_data, 450, 370, PDF_BLACK );
+    pdf_set_font( pdf, "Helvetica" );
+
     /*************************
-     * Capacity (Size) of disk
+     * Capacity (Size) of Drive
      */
 
     /* Size (Apparent) */
@@ -294,7 +307,7 @@ int create_pdf( nwipe_context_t* ptr )
          */
         if( c->Calculated_real_max_size_in_bytes >= c->device_size )
         {
-            /* displays the real max size of the disc from the DCO displayed in Green */
+            /* displays the real max size of the Drive from the DCO displayed in Green */
             snprintf( device_size,
                       sizeof( device_size ),
                       "%s, %lli bytes",
@@ -337,7 +350,7 @@ int create_pdf( nwipe_context_t* ptr )
 
     /* --------------- */
     /* Erasure Details */
-    pdf_add_text( pdf, NULL, "Disk Erasure Details", 12, 50, 330, PDF_BLUE );
+    pdf_add_text( pdf, NULL, "Drive Erasure Details", 12, 50, 330, PDF_BLUE );
 
     /* start time */
     pdf_add_text( pdf, NULL, "Start time:", 12, 60, 310, PDF_GRAY );
@@ -977,7 +990,7 @@ void create_header_and_footer( nwipe_context_t* c, char* page_title )
     pdf_add_text_wrap( pdf, NULL, serial_header, 14, 0, 735, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_set_font( pdf, "Helvetica" );
 
-    pdf_add_text_wrap( pdf, NULL, "Disk Erasure Report", 24, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    pdf_add_text_wrap( pdf, NULL, "Drive Erasure Report", 24, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     snprintf( barcode, sizeof( barcode ), "%s:%s", c->device_model, c->device_serial_no );
     pdf_add_text_wrap( pdf, NULL, page_title, 14, 0, 670, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
     pdf_add_barcode( pdf, NULL, PDF_BARCODE_128A, 100, 790, 400, 25, barcode, PDF_BLACK );
