@@ -932,7 +932,7 @@ int nwipe_get_smart_data( nwipe_context_t* c )
         else
         {
             x = 50;  // left side of page
-            y = 630;  // top row of page
+            y = pica(49.5);  // top row of page
             page_number = 2;
 
             /* Create Page 2 of the report. This shows the drives smart data
@@ -990,15 +990,15 @@ int nwipe_get_smart_data( nwipe_context_t* c )
                 y -= 9;
 
                 /* Have we reached the bottom of the page yet */
-                if( y < 60 )
+                if( y < pica(4.5) )
                 {
                     /* Append an extra page */
                     page = pdf_append_page( pdf );
                     page_number++;
-                    y = 630;
+                    y = pica(49.5);
 
                     /* create the header and footer for the next page */
-                    snprintf( page_title, sizeof( page_title ), "Page %i - Smart Data", page_number );
+                    snprintf( page_title, sizeof( page_title ), "Page %i - SMART Data", page_number );
                     create_header_and_footer( c, page_title );
                 }
             }
@@ -1018,22 +1018,33 @@ void create_header_and_footer( nwipe_context_t* c, char* page_title )
      * Create header and footer on most recently added page, with the exception
      * of the green tick/red icon which is set from the 'status' section below.
      */
-    pdf_add_text_wrap( pdf, NULL, pdf_footer, 12, 0, 30, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
-    pdf_add_line( pdf, NULL, 50, 50, 550, 50, 3, PDF_BLACK );
-    pdf_add_line( pdf, NULL, 50, 650, 550, 650, 3, PDF_BLACK );
-    pdf_add_image_data( pdf, NULL, 45, pica(51.5), 100, 100, bin2c_wyosupport_jpg, 36710 );
-    pdf_set_font( pdf, "Helvetica-Bold" );
-    snprintf( model_header, sizeof( model_header ), " %s: %s ", "Model", c->device_model );
-    pdf_add_text_wrap( pdf, NULL, model_header, 14, 0, 755, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
-    snprintf( serial_header, sizeof( serial_header ), " %s: %s ", "S/N", c->device_serial_no );
-    pdf_add_text_wrap( pdf, NULL, serial_header, 14, 0, 735, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
-    pdf_set_font( pdf, "Helvetica" );
 
-    pdf_add_text_wrap(
-        pdf, NULL, "Drive Erasure Report", 24, 0, 695, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    // Barcode
     snprintf( barcode, sizeof( barcode ), "%s:%s", c->device_model, c->device_serial_no );
-    pdf_add_text_wrap( pdf, NULL, page_title, 14, 0, 670, PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
-    pdf_add_barcode( pdf, NULL, PDF_BARCODE_128A, 100, 790, 400, 25, barcode, PDF_BLACK );
+    pdf_add_barcode( pdf, NULL, PDF_BARCODE_128A, 100, pica(61), 400, pica(2), barcode, PDF_BLACK );
+    
+    pdf_set_font( pdf, "Helvetica-Bold" );
+    // Drive Model
+    snprintf( model_header, sizeof( model_header ), " %s: %s ", "Model", c->device_model );
+    pdf_add_text_wrap( pdf, NULL, model_header, 14, 0, pica(59), PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    // Drive Serial No.
+    snprintf( serial_header, sizeof( serial_header ), " %s: %s ", "S/N", c->device_serial_no );
+    pdf_add_text_wrap( pdf, NULL, serial_header, 14, 0, pica(57.5), PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    
+    pdf_set_font( pdf, "Helvetica" );
+    pdf_add_text_wrap(
+        pdf, NULL, "Drive Data Erasure Report", 18, 0, pica(55), PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    pdf_add_text_wrap(
+        pdf, NULL, page_title, 14, 0, pica(53), PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
+    
+    // Logo - Left side
+    pdf_add_image_data( pdf, NULL, 45, pica(52), 114, 100, bin2c_wyosupport_jpg, 36710 );
+    pdf_add_line( pdf, NULL, 50, pica(51), 550, pica(51), 2, PDF_BLACK );
+    
+    // Footer
+    pdf_add_line( pdf, NULL, 50, pica(4.5), 550, pica(4.5), 2, PDF_BLACK );
+    pdf_set_font( pdf, "Helvetica" );
+    pdf_add_text_wrap( pdf, NULL, pdf_footer, 8, 0, pica(3), PDF_BLACK, page_width, PDF_ALIGN_CENTER, &height );
 
     /**********************************************************
      * Display the appropriate status icon, top right on page on
