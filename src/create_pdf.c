@@ -366,10 +366,10 @@ int create_pdf( nwipe_context_t* ptr )
 
     /* --------------- */
     /* Erasure Details */
-    pdf_add_text( pdf, NULL, "Drive Erasure Details", 12, 50, 315, PDF_BLUE );
+    pdf_add_text( pdf, NULL, "Drive Erasure Details", 12, 50, pica(36.5), PDF_BLUE );
 
     /* start time */
-    pdf_add_text( pdf, NULL, "Start time:", text_size_data, 60, 295, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Start time:", text_size_data, 60, pica(35), PDF_GRAY );
     p = localtime( &c->start_time );
     snprintf( start_time_text,
               sizeof( start_time_text ),
@@ -381,11 +381,11 @@ int create_pdf( nwipe_context_t* ptr )
               p->tm_min,
               p->tm_sec );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, start_time_text, text_size_data, 120, 295, PDF_BLACK );
+    pdf_add_text( pdf, NULL, start_time_text, text_size_data, 120, pica(35), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /* end time */
-    pdf_add_text( pdf, NULL, "End time:", text_size_data, 300, 295, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "End time:", text_size_data, 300, pica(35), PDF_GRAY );
     p = localtime( &c->end_time );
     snprintf( end_time_text,
               sizeof( end_time_text ),
@@ -397,27 +397,27 @@ int create_pdf( nwipe_context_t* ptr )
               p->tm_min,
               p->tm_sec );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, end_time_text, text_size_data, 360, 295, PDF_BLACK );
+    pdf_add_text( pdf, NULL, end_time_text, text_size_data, 360, pica(35), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /* Duration */
-    pdf_add_text( pdf, NULL, "Duration:", text_size_data, 60, 275, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Duration:", text_size_data, 300, pica(34), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, c->duration_str, text_size_data, 115, 275, PDF_BLACK );
+    pdf_add_text( pdf, NULL, c->duration_str, text_size_data, 360, pica(34), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /*******************
      * Status of erasure
      */
-    pdf_add_text( pdf, NULL, "Status:", text_size_data, 300, 275, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Status:", text_size_data, 300, pica(36.5), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
 
     if( !strcmp( c->wipe_status_txt, "ERASED" )
         && ( c->HPA_status == HPA_DISABLED || c->HPA_status == HPA_NOT_APPLICABLE || c->device_type == NWIPE_DEVICE_NVME
              || c->device_type == NWIPE_DEVICE_VIRT ) )
     {
-        pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 365, 275, PDF_DARK_GREEN );
-        pdf_add_ellipse( pdf, NULL, 390, 280, 45, 10, 2, PDF_DARK_GREEN, PDF_TRANSPARENT );
+        pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 365, pica(36.5), PDF_DARK_GREEN );
+        pdf_add_ellipse( pdf, NULL, 390, pica(36.5)+5, 45, 10, 2, PDF_DARK_GREEN, PDF_TRANSPARENT );
 
         /* Display the green tick icon in the header */
         pdf_add_image_data( pdf, NULL, 450, pica(51.5), 100, 100, bin2c_te_jpg, 54896 );
@@ -428,9 +428,9 @@ int create_pdf( nwipe_context_t* ptr )
         if( !strcmp( c->wipe_status_txt, "ERASED" )
             && ( c->HPA_status == HPA_ENABLED || c->HPA_status == HPA_UNKNOWN ) )
         {
-            pdf_add_ellipse( pdf, NULL, 390, 280, 45, 10, 2, PDF_RED, PDF_BLACK );
-            pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 365, 275, PDF_YELLOW );
-            pdf_add_text( pdf, NULL, "See Warning !", text_size_data, 450, 275, PDF_RED );
+            pdf_add_ellipse( pdf, NULL, 390, pica(36.5)+5, 45, 10, 2, PDF_RED, PDF_BLACK );
+            pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 365, pica(36.5), PDF_YELLOW );
+            pdf_add_text( pdf, NULL, "See Warning !", text_size_data, 450, pica(36.5), PDF_RED );
 
             /* Display the yellow exclamation icon in the header */
             pdf_add_image_data( pdf, NULL, 450, pica(51.5), 100, 100, bin2c_nwipe_exclamation_jpg, 65791 );
@@ -441,7 +441,7 @@ int create_pdf( nwipe_context_t* ptr )
             if( !strcmp( c->wipe_status_txt, "FAILED" ) )
             {
                 // text shifted left slightly in ellipse due to extra character
-                pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 370, 275, PDF_RED );
+                pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 370, pica(36.5), PDF_RED );
 
                 // Display the red cross in the header
                 pdf_add_image_data( pdf, NULL, 450, pica(51.5), 100, 100, bin2c_redcross_jpg, 60331 );
@@ -449,13 +449,13 @@ int create_pdf( nwipe_context_t* ptr )
             }
             else
             {
-                pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 360, 275, PDF_RED );
+                pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, 360, pica(36.5), PDF_RED );
 
                 // Print the red cross
                 pdf_add_image_data( pdf, NULL, 450, pica(51.5), 100, 100, bin2c_redcross_jpg, 60331 );
                 status_icon = STATUS_ICON_RED_CROSS;  // used later on page 2
             }
-            pdf_add_ellipse( pdf, NULL, 390, 280, 45, 10, 2, PDF_RED, PDF_TRANSPARENT );
+            pdf_add_ellipse( pdf, NULL, 390, pica(36.5)+5, 45, 10, 2, PDF_RED, PDF_TRANSPARENT );
         }
     }
     pdf_set_font( pdf, "Helvetica" );
@@ -463,15 +463,15 @@ int create_pdf( nwipe_context_t* ptr )
     /********
      * Method
      */
-    pdf_add_text( pdf, NULL, "Method:", text_size_data, 60, 255, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Method:", text_size_data, 60, pica(33), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, nwipe_method_label( nwipe_options.method ), text_size_data, 110, 255, PDF_BLACK );
+    pdf_add_text( pdf, NULL, nwipe_method_label( nwipe_options.method ), text_size_data, 110, pica(33), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /***********
      * prng type
      */
-    pdf_add_text( pdf, NULL, "PRNG algorithm:", text_size_data, 300, 255, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "PRNG algorithm:", text_size_data, 300, pica(33), PDF_GRAY );
     if( nwipe_options.method == &nwipe_verify_one || nwipe_options.method == &nwipe_verify_zero
         || nwipe_options.method == &nwipe_zero || nwipe_options.method == &nwipe_one )
     {
@@ -517,7 +517,7 @@ int create_pdf( nwipe_context_t* ptr )
         }
     }
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, prng_type, text_size_data, 395, 255, PDF_BLACK );
+    pdf_add_text( pdf, NULL, prng_type, text_size_data, 395, pica(33), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /******************************************************
@@ -531,9 +531,9 @@ int create_pdf( nwipe_context_t* ptr )
     {
         strcpy( blank, "Zeros" );
     }
-    pdf_add_text( pdf, NULL, "Final Pass(Zeros/Ones/None):", text_size_data, 60, 235, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Final Pass(Zeros/Ones/None):", text_size_data, 60, pica(32), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, blank, text_size_data, 230, 235, PDF_BLACK );
+    pdf_add_text( pdf, NULL, blank, text_size_data, 230, pica(32), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /* ***********************************************************************
@@ -553,22 +553,22 @@ int create_pdf( nwipe_context_t* ptr )
             strcpy( verify, "Verify All" );
             break;
     }
-    pdf_add_text( pdf, NULL, "Verify Pass(Last/All/None):", text_size_data, 300, 235, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Verify Pass(Last/All/None):", text_size_data, 300, pica(32), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, verify, text_size_data, 450, 235, PDF_BLACK );
+    pdf_add_text( pdf, NULL, verify, text_size_data, 450, pica(32), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /* ************
      * bytes erased
      */
-    pdf_add_text( pdf, NULL, "Bytes Erased*:", text_size_data, 60, 215, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Bytes Erased*:", text_size_data, 60, pica(31), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
 
     /* Bytes erased is not applicable when user only requested a verify */
     if( nwipe_options.method == &nwipe_verify_one || nwipe_options.method == &nwipe_verify_zero )
     {
         snprintf( bytes_erased, sizeof( bytes_erased ), "Not applicable to method" );
-        pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, 215, PDF_BLACK );
+        pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, pica(31), PDF_BLACK );
     }
     else
     {
@@ -582,11 +582,11 @@ int create_pdf( nwipe_context_t* ptr )
 
             if( c->bytes_erased == c->device_size )
             {
-                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, 215, PDF_DARK_GREEN );
+                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, pica(31), PDF_DARK_GREEN );
             }
             else
             {
-                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, 215, PDF_RED );
+                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, pica(31), PDF_RED );
             }
         }
         else
@@ -600,11 +600,11 @@ int create_pdf( nwipe_context_t* ptr )
 
             if( c->bytes_erased == c->Calculated_real_max_size_in_bytes )
             {
-                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, 215, PDF_DARK_GREEN );
+                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, pica(31), PDF_DARK_GREEN );
             }
             else
             {
-                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, 215, PDF_RED );
+                pdf_add_text( pdf, NULL, bytes_erased, text_size_data, 145, pica(31), PDF_RED );
             }
         }
     }
@@ -613,28 +613,28 @@ int create_pdf( nwipe_context_t* ptr )
     /************************************************
      * rounds - How many times the method is repeated
      */
-    pdf_add_text( pdf, NULL, "Rounds(completed/requested):", text_size_data, 300, 215, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Rounds Completed:", text_size_data, 300, pica(31), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
     if( !strcmp( c->wipe_status_txt, "ERASED" ) )
     {
-        snprintf( rounds, sizeof( rounds ), "%i/%i", c->round_working, nwipe_options.rounds );
-        pdf_add_text( pdf, NULL, rounds, text_size_data, 470, 215, PDF_DARK_GREEN );
+        snprintf( rounds, sizeof( rounds ), "%i of %i", c->round_working, nwipe_options.rounds );
+        pdf_add_text( pdf, NULL, rounds, text_size_data, 470, pica(31), PDF_DARK_GREEN );
     }
     else
     {
-        snprintf( rounds, sizeof( rounds ), "%i/%i", c->round_working - 1, nwipe_options.rounds );
-        pdf_add_text( pdf, NULL, rounds, text_size_data, 470, 215, PDF_RED );
+        snprintf( rounds, sizeof( rounds ), "%i of %i", c->round_working - 1, nwipe_options.rounds );
+        pdf_add_text( pdf, NULL, rounds, text_size_data, 470, pica(31), PDF_RED );
     }
     pdf_set_font( pdf, "Helvetica" );
 
     /*******************
      * HPA, DCO - LABELS
      */
-    pdf_add_text( pdf, NULL, "HPA/DCO:", text_size_data, 60, 195, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "HPA/DCO:", text_size_data, 60, pica(30), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 155, 195, PDF_BLACK );
+    pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 155, pica(30), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
-    pdf_add_text( pdf, NULL, "HPA/DCO Size:", text_size_data, 300, 195, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "HPA/DCO Size:", text_size_data, 300, pica(30), PDF_GRAY );
 
     /*******************
      * Populate HPA size
@@ -644,28 +644,28 @@ int create_pdf( nwipe_context_t* ptr )
     if( c->HPA_status == HPA_ENABLED )
     {
         snprintf( HPA_size_text, sizeof( HPA_size_text ), "%lli sectors", c->HPA_sectors );
-        pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, 195, PDF_RED );
+        pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, pica(30), PDF_RED );
     }
     else
     {
         if( c->HPA_status == HPA_DISABLED )
         {
             snprintf( HPA_size_text, sizeof( HPA_size_text ), "No hidden sectors" );
-            pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, 195, PDF_DARK_GREEN );
+            pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, pica(30), PDF_DARK_GREEN );
         }
         else
         {
             if( c->HPA_status == HPA_NOT_APPLICABLE )
             {
                 snprintf( HPA_size_text, sizeof( HPA_size_text ), "Not Applicable" );
-                pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, 195, PDF_DARK_GREEN );
+                pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, pica(30), PDF_DARK_GREEN );
             }
             else
             {
                 if( c->HPA_status == HPA_UNKNOWN )
                 {
                     snprintf( HPA_size_text, sizeof( HPA_size_text ), "Unknown" );
-                    pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, 195, PDF_RED );
+                    pdf_add_text( pdf, NULL, HPA_size_text, text_size_data, 390, pica(30), PDF_RED );
                 }
             }
         }
@@ -681,7 +681,7 @@ int create_pdf( nwipe_context_t* ptr )
     {
         snprintf( HPA_status_text, sizeof( HPA_status_text ), "Not applicable" );
         pdf_set_font( pdf, "Helvetica-Bold" );
-        pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, 195, PDF_DARK_GREEN );
+        pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, pica(30), PDF_DARK_GREEN );
         pdf_set_font( pdf, "Helvetica" );
     }
     else
@@ -690,7 +690,7 @@ int create_pdf( nwipe_context_t* ptr )
         {
             snprintf( HPA_status_text, sizeof( HPA_status_text ), "Hidden sectors found!" );
             pdf_set_font( pdf, "Helvetica-Bold" );
-            pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, 195, PDF_RED );
+            pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, pica(30), PDF_RED );
             pdf_set_font( pdf, "Helvetica" );
         }
         else
@@ -699,7 +699,7 @@ int create_pdf( nwipe_context_t* ptr )
             {
                 snprintf( HPA_status_text, sizeof( HPA_status_text ), "No hidden sectors" );
                 pdf_set_font( pdf, "Helvetica-Bold" );
-                pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, 195, PDF_DARK_GREEN );
+                pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, pica(30), PDF_DARK_GREEN );
                 pdf_set_font( pdf, "Helvetica" );
             }
             else
@@ -708,16 +708,16 @@ int create_pdf( nwipe_context_t* ptr )
                 {
                     snprintf( HPA_status_text, sizeof( HPA_status_text ), "Unknown" );
                     pdf_set_font( pdf, "Helvetica-Bold" );
-                    pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, 195, PDF_RED );
+                    pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, pica(30), PDF_RED );
                     pdf_set_font( pdf, "Helvetica" );
                 }
                 else
                 {
                     if( c->HPA_status == HPA_NOT_SUPPORTED_BY_DRIVE )
                     {
-                        snprintf( HPA_status_text, sizeof( HPA_status_text ), "No hidden sectors **DDNSHDA" );
+                        snprintf( HPA_status_text, sizeof( HPA_status_text ), "No hidden sectors DDNSHDA**" );
                         pdf_set_font( pdf, "Helvetica-Bold" );
-                        pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, 195, PDF_DARK_GREEN );
+                        pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, 130, pica(30), PDF_DARK_GREEN );
                         pdf_set_font( pdf, "Helvetica" );
                     }
                 }
@@ -728,89 +728,94 @@ int create_pdf( nwipe_context_t* ptr )
     /************
      * Throughput
      */
-    pdf_add_text( pdf, NULL, "Throughput:", text_size_data, 300, 175, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Throughput:", text_size_data, 300, pica(29), PDF_GRAY );
     snprintf( throughput_txt, sizeof( throughput_txt ), "%s/sec", c->throughput_txt );
     pdf_set_font( pdf, "Helvetica-Bold" );
-    pdf_add_text( pdf, NULL, throughput_txt, text_size_data, 370, 175, PDF_BLACK );
+    pdf_add_text( pdf, NULL, throughput_txt, text_size_data, 370, pica(29), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /********
      * Errors
      */
-    pdf_add_text( pdf, NULL, "Errors(pass/sync/verify):", text_size_data, 60, 175, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Errors(pass/sync/verify):", text_size_data, 60, pica(29), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
     snprintf( errors, sizeof( errors ), "%llu/%llu/%llu", c->pass_errors, c->fsyncdata_errors, c->verify_errors );
     if( c->pass_errors != 0 || c->fsyncdata_errors != 0 || c->verify_errors != 0 )
     {
-        pdf_add_text( pdf, NULL, errors, text_size_data, 195, 175, PDF_RED );
+        pdf_add_text( pdf, NULL, errors, text_size_data, 195, pica(29), PDF_RED );
     }
     else
     {
-        pdf_add_text( pdf, NULL, errors, text_size_data, 195, 175, PDF_DARK_GREEN );
+        pdf_add_text( pdf, NULL, errors, text_size_data, 195, pica(29), PDF_DARK_GREEN );
     }
     pdf_set_font( pdf, "Helvetica" );
 
     /*************
      * Information
      */
-    pdf_add_text( pdf, NULL, "Information:", text_size_data, 60, 155, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Information:", text_size_data, 60, pica(28), PDF_GRAY );
     pdf_set_font( pdf, "Helvetica-Bold" );
 
     if( !strcmp( c->wipe_status_txt, "ERASED" ) && c->HPA_status == HPA_ENABLED )
     {
-        pdf_add_ellipse( pdf, NULL, 160, 158, 30, 9, 2, PDF_RED, PDF_BLACK );
-        pdf_add_text( pdf, NULL, "Warning", text_size_data, 140, 155, PDF_YELLOW );
+        pdf_add_ellipse( pdf, NULL, 160, pica(28)+3, 30, 9, 2, PDF_RED, PDF_BLACK );
+        pdf_add_text( pdf, NULL, "Warning", text_size_data, 140, pica(28), PDF_YELLOW );
 
         pdf_add_text( pdf,
                       NULL,
                       "Visible sectors erased as requested, however hidden sectors NOT erased",
                       text_size_data,
                       200,
-                      155,
+                      pica(28),
                       PDF_RED );
     }
     else
     {
         if( c->HPA_status == HPA_UNKNOWN )
         {
-            pdf_add_ellipse( pdf, NULL, 160, 158, 30, 9, 2, PDF_RED, PDF_BLACK );
-            pdf_add_text( pdf, NULL, "Warning", text_size_data, 140, 155, PDF_YELLOW );
+            pdf_add_ellipse( pdf, NULL, 160, pica(28)+3, 30, 9, 2, PDF_RED, PDF_BLACK );
+            pdf_add_text( pdf, NULL, "Warning", text_size_data, 140, pica(28), PDF_YELLOW );
 
             pdf_add_text( pdf,
                           NULL,
                           "HPA/DCO data unavailable, can not determine hidden sector status.",
                           text_size_data,
                           200,
-                          155,
+                          pica(28),
                           PDF_RED );
         }
     }
-
+    pdf_set_font( pdf, "Helvetica" );
     /* info descripting what bytes erased actually means */
     pdf_add_text( pdf,
                   NULL,
                   "* Bytes erased: The amount of drive that's been erased at least once",
-                  text_size_data,
-                  60,
-                  125,
+                  8,
+                  50,
+                  pica(26),
                   PDF_BLACK );
 
     /* meaning of abreviation DDNSHPA */
     if( c->HPA_status == HPA_NOT_SUPPORTED_BY_DRIVE )
     {
         pdf_add_text(
-            pdf, NULL, "** DDNSHPA = Drive does not support HPA/DCO", text_size_data, 60, 110, PDF_DARK_GREEN );
+            pdf, NULL, "** DDNSHPA = Drive does not support HPA/DCO", 8, 50, pica(25), PDF_DARK_GREEN );
     }
     pdf_set_font( pdf, "Helvetica" );
-
+    pdf_add_line( pdf, NULL, 50, pica(23.5), 550, pica(23.5), 1, PDF_GRAY );
+    /************************
+     * Empty box between pica 8.5 and pica 25
+     */
+    
+    
+    pdf_add_line( pdf, NULL, 50, pica(8.5), 550, pica(8.5), 1, PDF_GRAY );
     /************************
      * Technician/Operator ID
      */
-    pdf_add_line( pdf, NULL, 50, 105, 550, 105, 1, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Technician/Operator ID", 12, 50, 85, PDF_BLUE );
-    pdf_add_text( pdf, NULL, "Name/ID:", text_size_data, 60, 65, PDF_GRAY );
-    pdf_add_text( pdf, NULL, "Signature:", 12, 300, 85, PDF_BLUE );
-    pdf_add_line( pdf, NULL, 360, 65, 550, 65, 1, PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Technician/Operator ID", 12, 50, pica(7), PDF_BLUE );
+    pdf_add_text( pdf, NULL, "Name/ID:", text_size_data, 60, pica(6.5), PDF_GRAY );
+    pdf_add_text( pdf, NULL, "Signature:", 12, 300, pica(7), PDF_BLUE );
+    pdf_add_line( pdf, NULL, 360, pica(6.5), 550, pica(6.5), 1, PDF_GRAY );
 
     pdf_set_font( pdf, "Helvetica-Bold" );
     /* Obtain organisational details from nwipe.conf - See conf.c */
@@ -917,7 +922,7 @@ int nwipe_get_smart_data( nwipe_context_t* c )
             page = pdf_append_page( pdf );
 
             /* Create the header and footer for page 2, the start of the smart data */
-            snprintf( page_title, sizeof( page_title ), "Page %i - Smart Data", page_number );
+            snprintf( page_title, sizeof( page_title ), "Page %i - SMART Data", page_number );
             create_header_and_footer( c, page_title );
 
             /* Read the output a line at a time - output it. */
