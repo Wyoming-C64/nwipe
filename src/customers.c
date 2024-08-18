@@ -206,6 +206,7 @@ void delete_customer( int count, char** customer_list_array )
 
 void write_customer_csv_entry( char* customer_name,
                                char* customer_address,
+                               char* customer_citystatepostal,
                                char* customer_contact_name,
                                char* customer_contact_phone )
 {
@@ -215,7 +216,7 @@ void write_customer_csv_entry( char* customer_name,
      */
 
     FILE* fptr = 0;
-    FILE* fptr2 = 0;
+    FILE* fptr2 = 0; 
 
     size_t result_size;
 
@@ -247,9 +248,9 @@ void write_customer_csv_entry( char* customer_name,
 
     size_t new_customers_buffer_length;
 
-    /* Determine length of all four strings and malloc sufficient storage + 12 = 8 quotes + three colons + null */
-    csv_line_length = strlen( customer_name ) + strlen( customer_address ) + strlen( customer_contact_name )
-        + strlen( customer_contact_phone ) + 12;
+    /* Determine length of all four strings and malloc sufficient storage + 15 = 10 quotes + four colons + null */
+    csv_line_length = strlen( customer_name ) + strlen( customer_address ) + strlen( customer_citystatepostal ) 
+        + ( customer_contact_name ) + strlen( customer_contact_phone ) + 15;
     if( !( csv_buffer = calloc( 1, csv_line_length == 0 ) ) )
     {
         nwipe_log( NWIPE_LOG_ERROR, "func:nwipe_gui_add_customer:csv_buffer, calloc returned NULL " );
@@ -349,6 +350,27 @@ void write_customer_csv_entry( char* customer_name,
                         while( idx3 < FIELD_LENGTH && idx2 < new_customers_buffer_size && customer_address[idx3] != 0 )
                         {
                             new_customers_buffer[idx2++] = customer_address[idx3++];
+                        }
+
+                        /* Close customer name field with a quote */
+                        new_customers_buffer[idx2++] = '\"';
+
+                        /* Insert field delimiters, we use a semi-colon, not a comma ';' */
+                        new_customers_buffer[idx2++] = ';';
+
+                        /* -----------------------------------------------------------------------------
+                         * Copy the new customer city,state,zip entry so it is immediately after the csv header
+                         */
+
+                        idx3 = 0;
+
+                        /* Start with first entries opening quote */
+                        new_customers_buffer[idx2++] = '\"';
+
+                        /* Copy the customer_name string */
+                        while( idx3 < FIELD_LENGTH && idx2 < new_customers_buffer_size && customer_citystatepostal[idx3] != 0 )
+                        {
+                            new_customers_buffer[idx2++] = customer_citystatepostal[idx3++];
                         }
 
                         /* Close customer name field with a quote */

@@ -20,3 +20,7 @@ src/Makefile
 src/Makefile.in
 src/nwipe
 stamp-h1
+*.pdf
+settings.json
+*.guess
+config.sub

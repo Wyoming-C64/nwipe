@@ -117,8 +117,8 @@ int create_pdf( nwipe_context_t* ptr )
 
     /* variables used by libconfig */
     config_setting_t* setting;
-    const char *business_name, *business_address, *contact_name, *contact_phone, *op_tech_name, *customer_name,
-        *customer_address, *customer_contact_name, *customer_contact_phone;
+    const char *business_name, *business_address, *business_citystatepostal, *contact_name, *contact_phone, *op_tech_name, 
+        *customer_name, *customer_address, *customer_citystatepostal, *customer_contact_name, *customer_contact_phone;
 
     /* ------------------ */
     /* Initialise Various */
@@ -192,11 +192,11 @@ int create_pdf( nwipe_context_t* ptr )
             // pdf_add_text( pdf, NULL, business_address, text_size_data, 165, 590, PDF_BLACK );
             pdf_add_text( pdf, NULL, business_address, text_size_data, 60, pica(47), PDF_BLACK );
         }
-        // if( config_setting_lookup_string( setting, "Business_CityStatePostal", &business_citystatepostal ) )
-        // {
-        //     // pdf_add_text( pdf, NULL, business_address, text_size_data, 165, 590, PDF_BLACK );
-        //     pdf_add_text( pdf, NULL, business_citystatepostal, text_size_data, 60, pica(46), PDF_BLACK );
-        // }
+        if( config_setting_lookup_string( setting, "Business_CityStatePostal", &business_citystatepostal ) )
+        {
+            // pdf_add_text( pdf, NULL, business_address, text_size_data, 165, 590, PDF_BLACK );
+            pdf_add_text( pdf, NULL, business_citystatepostal, text_size_data, 60, pica(46), PDF_BLACK );
+        }
         if( config_setting_lookup_string( setting, "Contact_Name", &contact_name ) )
         {
             // pdf_add_text( pdf, NULL, contact_name, text_size_data, 145, 570, PDF_BLACK );
@@ -236,10 +236,10 @@ int create_pdf( nwipe_context_t* ptr )
         {
             pdf_add_text( pdf, NULL, customer_address, text_size_data, 310, pica(47), PDF_BLACK );
         }
-        // if( config_setting_lookup_string( setting, "Customer_CityStatePostal", &customer_citystatepostal ) )
-        // {
-        //     pdf_add_text( pdf, NULL, customer_citystatepostal, text_size_data, 310, pica(46), PDF_BLACK );
-        // }
+        if( config_setting_lookup_string( setting, "Customer_CityStatePostal", &customer_citystatepostal ) )
+        {
+            pdf_add_text( pdf, NULL, customer_citystatepostal, text_size_data, 310, pica(46), PDF_BLACK );
+        }
         if( config_setting_lookup_string( setting, "Contact_Name", &customer_contact_name ) )
         {
             pdf_add_text( pdf, NULL, customer_contact_name, text_size_data, 310, pica(45), PDF_BLACK );
@@ -295,7 +295,7 @@ int create_pdf( nwipe_context_t* ptr )
      */
     pdf_add_text( pdf, NULL, "Computer S/N:", text_size_data, 310, pica(38), PDF_GRAY );
     pdf_set_font( pdf, "Courier-Bold" );
-    pdf_add_text( pdf, NULL, "___________________", text_size_data, drive_info_col_B, pica(38), PDF_BLACK );
+    pdf_add_text( pdf, NULL, "_______________________", text_size_data, drive_info_col_B, pica(37.5), PDF_BLACK );
     pdf_set_font( pdf, "Helvetica" );
 
     /*************************
@@ -440,9 +440,9 @@ int create_pdf( nwipe_context_t* ptr )
         if( !strcmp( c->wipe_status_txt, "ERASED" )
             && ( c->HPA_status == HPA_ENABLED || c->HPA_status == HPA_UNKNOWN ) )
         {
-            pdf_add_ellipse( pdf, NULL, drive_details_col_B+25, pica(35.5)+5, 45, 10, 2, PDF_RED, PDF_BLACK );
+            pdf_add_ellipse( pdf, NULL, drive_details_col_B+20, pica(35.5)+3, 45, 10, 2, PDF_RED, PDF_BLACK );
             pdf_add_text( pdf, NULL, c->wipe_status_txt, text_size_data, drive_details_col_B, pica(35.5), PDF_YELLOW );
-            pdf_add_text( pdf, NULL, "See Warning !", text_size_data, drive_details_col_B+60, pica(35.5), PDF_RED );
+            pdf_add_text( pdf, NULL, "See Warning!", text_size_data, drive_details_col_B+75, pica(35.5), PDF_RED );
 
             /* Display the yellow exclamation icon in the header */
             pdf_add_image_data( pdf, NULL, 450, pica(51.5), 100, 100, bin2c_nwipe_exclamation_jpg, 65791 );
@@ -731,7 +731,7 @@ int create_pdf( nwipe_context_t* ptr )
                 {
                     if( c->HPA_status == HPA_NOT_SUPPORTED_BY_DRIVE )
                     {
-                        snprintf( HPA_status_text, sizeof( HPA_status_text ), "No hidden sectors DDNSHDA**" );
+                        snprintf( HPA_status_text, sizeof( HPA_status_text ), "No hidden sectors, DDNSHDA**" );
                         pdf_set_font( pdf, "Helvetica-Bold" );
                         pdf_add_text( pdf, NULL, HPA_status_text, text_size_data, drive_details_col_A, pica(28), PDF_DARK_GREEN );
                         pdf_set_font( pdf, "Helvetica" );
@@ -779,7 +779,7 @@ int create_pdf( nwipe_context_t* ptr )
 
         pdf_add_text( pdf,
                       NULL,
-                      "Visible sectors erased as requested, however hidden sectors NOT erased",
+                      "Visible sectors erased as requested, however hidden sectors NOT erased.",
                       text_size_data,
                       drive_details_col_A+60,
                       pica(25.5),
@@ -805,7 +805,7 @@ int create_pdf( nwipe_context_t* ptr )
     /* info descripting what bytes erased actually means */
     pdf_add_text( pdf,
                   NULL,
-                  "* Bytes erased: The amount of drive that's been erased at least once",
+                  "* Bytes erased: The amount of drive that's been erased at least once.",
                   8,
                   50,
                   pica(24),
@@ -815,7 +815,7 @@ int create_pdf( nwipe_context_t* ptr )
     if( c->HPA_status == HPA_NOT_SUPPORTED_BY_DRIVE )
     {
         pdf_add_text(
-            pdf, NULL, "** DDNSHPA = Drive does not support HPA/DCO", 8, 50, pica(23), PDF_DARK_GREEN );
+            pdf, NULL, "** DDNSHPA = Drive does not support HPA/DCO.", 8, 50, pica(23), PDF_DARK_GREEN );
     }
     pdf_set_font( pdf, "Helvetica" );
     pdf_add_line( pdf, NULL, 50, pica(22.5), 550, pica(22.5), 1, PDF_GRAY );
@@ -833,7 +833,7 @@ int create_pdf( nwipe_context_t* ptr )
     pdf_add_text( pdf, NULL, "Technician/Operator ID", 12, 50, pica(7), PDF_BLUE );
     pdf_add_text( pdf, NULL, "Name/ID:", text_size_data, 60, pica(5.5), PDF_GRAY );
     pdf_add_text( pdf, NULL, "Signature:", 12, 300, pica(7), PDF_BLUE );
-    pdf_add_line( pdf, NULL, 360, pica(6.5), 550, pica(6.5), 1, PDF_GRAY );
+    pdf_add_line( pdf, NULL, 360, pica(5.5), 550, pica(5.5), 0.75, PDF_BLACK );
 
     pdf_set_font( pdf, "Helvetica-Bold" );
     /* Obtain organisational details from nwipe.conf - See conf.c */

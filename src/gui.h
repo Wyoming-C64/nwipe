@@ -57,6 +57,7 @@ void nwipe_gui_config( void );  // Change the nwipe settings
 void nwipe_gui_edit_organisation( void );  // Edit organisation performing the erasure
 void nwipe_gui_organisation_business_name( const char* );  // Edit business name performing erase
 void nwipe_gui_organisation_business_address( const char* );  // Edit business address performing erase
+void nwipe_gui_organisation_citystatepostal( const char* ); // Edit business city, state, and postal code (combined)
 void nwipe_gui_organisation_contact_name( const char* );  // Edit business contact name
 void nwipe_gui_organisation_contact_phone( const char* );  // Edit business contact phone
 void nwipe_gui_organisation_op_tech_name( const char* );  // Edit the name of the operator/technician
@@ -64,6 +65,7 @@ void nwipe_gui_list( int, char* window_title, char**, int* );
 void nwipe_gui_add_customer( void );  // Add new customer
 void nwipe_gui_add_customer_name( char* );  // Add new customer name
 void nwipe_gui_add_customer_address( char* );  // Add new customer address
+void nwipe_gui_add_customer_citystatepostal( char* ); // Add new customer city, state, postal code (combined)
 void nwipe_gui_add_customer_contact_name( char* );  // Add new customer contact name
 void nwipe_gui_add_customer_contact_phone( char* );  // Add new customer contact phone
 int nwipe_gui_yes_no_footer( void );  // Change footer to yes no
